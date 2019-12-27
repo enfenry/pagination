@@ -121,7 +121,7 @@ let json = [
     }
 ];
 
-function displayResults(data) {
+function createResults(data) {
     function createTD(inner) {
         let td = $('<td>');
         td.html(inner);
@@ -186,8 +186,8 @@ function createListItems(data, numPerPage) {
         let activeIndex = parseInt($('.page-item.active > .page-link').html());
         let multiplier = activeIndex - 1;
         let start = multiplier * numPerPage;
-        let end = Math.min(data.length, start + 6);
-        displayResults(data.slice(start,end));
+        let end = Math.min(data.length, start + numPerPage);
+        createResults(data.slice(start,end));
     }
 
     // Create nav button for each page
@@ -222,6 +222,7 @@ function createListItems(data, numPerPage) {
     aPrev.attr('tabindex', -1);
     let liPrev = createPageItem(aPrev);
     addPrevNextFunc(liPrev);
+    // add disabled class on initial load
     liPrev.addClass('disabled');
     $('.pagination').prepend(liPrev);
 
@@ -231,8 +232,7 @@ function createListItems(data, numPerPage) {
     let liNext = createPageItem(aNext);
     addPrevNextFunc(liNext);
     $('.pagination').append(liNext);
-
 }
 
-displayResults(json.slice(0,6));
+createResults(json.slice(0,6));
 createListItems(json, 6);
