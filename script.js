@@ -121,6 +121,7 @@ let json = [
     }
 ];
 
+displayResults(json);
 
 function displayResults(data) {
     function createTD(inner) {
@@ -129,9 +130,11 @@ function displayResults(data) {
         return td;
     }
 
-    function createTR(inner) {
+    function createTR(array) {
         let tr = $('<tr>');
-        tr.html(inner);
+        array.forEach(element => {
+            tr.append(element);
+        })
         return tr;
     }
 
@@ -139,6 +142,8 @@ function displayResults(data) {
         let tdBookId = createTD(element.bookId);
         let tdTitle = createTD(element.title);
         let tdAuthorName = createTD(element.authorName);
+        let tr = createTR([tdBookId,tdTitle,tdAuthorName]);
+        $('.table').append(tr);
     })
 }
 
