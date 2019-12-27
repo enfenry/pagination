@@ -2,5 +2,5 @@
 Exercise demonstrating simple pagination in Javascript
 
 
-##Deployed Here:
+## Deployed Here:
 https://enfenry.github.io/pagination/
