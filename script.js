@@ -121,7 +121,7 @@ let json = [
     }
 ];
 
-displayResults(json);
+displayResults(json.slice(0,6));
 
 function displayResults(data) {
     function createTD(inner) {
@@ -183,12 +183,23 @@ function createListItems(data, numPerPage) {
         }
     }
 
+    function handleResults() {
+        $('tbody').empty();
+        let activeIndex = parseInt($('.page-item.active > .page-link').html());
+        let multiplier = activeIndex - 1;
+        let start = multiplier * numPerPage;
+        let end = Math.min(data.length, start + 6);
+        console.log(start,end);
+        displayResults(data.slice(start,end));
+    }
+
     // Create nav button for each page
     for (let i = 0; i < numPages; i++) {
         let a = createPageLink(i + 1, `#`);
         let li = createPageItem(a);
         li.on('click', function () {
             handleActiveDisabled($(this));
+            handleResults();
         })
         $('.pagination').append(li);
     }
@@ -204,6 +215,7 @@ function createListItems(data, numPerPage) {
                 let tabIndex = parseInt($('> .page-link', this).attr('tabindex'));
                 let newIndex = activeIndex + tabIndex + 1;
                 handleActiveDisabled($(`.pagination > li:nth-child(${newIndex})`));
+                handleResults();
             }
         })
     }
