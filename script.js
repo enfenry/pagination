@@ -121,6 +121,27 @@ let json = [
     }
 ];
 
+
+function displayResults(data) {
+    function createTD(inner) {
+        let td = $('<td>');
+        td.html(inner);
+        return td;
+    }
+
+    function createTR(inner) {
+        let tr = $('<tr>');
+        tr.html(inner);
+        return tr;
+    }
+
+    data.forEach(element => {
+        let tdBookId = createTD(element.bookId);
+        let tdTitle = createTD(element.title);
+        let tdAuthorName = createTD(element.authorName);
+    })
+}
+
 function createListItems(data, numPerPage) {
     let numPages = Math.ceil(data.length / numPerPage);
 
