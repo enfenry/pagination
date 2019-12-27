@@ -121,8 +121,6 @@ let json = [
     }
 ];
 
-console.log(json);
-
 function createListItems(data, numPerPage) {
     let numPages = Math.ceil(data.length / numPerPage);
 
@@ -145,42 +143,56 @@ function createListItems(data, numPerPage) {
         return li;
     }
 
-    function addPrevNextFunc(li) {
-        li.on('click', function () {
-            // Add active class to the current list item
-            let activeIndex = $('.page-item.active > .page-link').html();
-            let tabIndex = $('> .page-link', this).attr('tabindex');
-            let newIndex = parseInt(activeIndex) + parseInt(tabIndex) + 1;
-            $('.page-item').removeClass('active');
-            $(`.pagination > li:nth-child(${newIndex})`).addClass('active');
-        })
-    }
+    function handleActiveDisabled(newActiveItem) {
+        $('.page-item').removeClass('active');
+        newActiveItem.addClass('active');
 
-    // Create Previous nav button
-    let aPrev = createPageLink(`<`, `#`);
-    aPrev.attr('tabindex',-1);
-    let liPrev = createPageItem(aPrev);
-    addPrevNextFunc(liPrev);
-    liPrev.addClass('disabled');
-    $('.pagination').prepend(liPrev);
+        let activeIndex = parseInt($('.page-item.active > .page-link').html());
+        $('.page-item').removeClass('disabled');
+        if (activeIndex == 1) {
+            $(`.pagination > li:nth-child(${activeIndex})`).addClass('disabled');
+        }
+        else if (activeIndex == numPages) {
+            $(`.pagination > li:nth-child(${activeIndex + 2})`).addClass('disabled');
+        }
+    }
 
     // Create nav button for each page
     for (let i = 0; i < numPages; i++) {
         let a = createPageLink(i + 1, `#`);
         let li = createPageItem(a);
         li.on('click', function () {
-            $('.page-item').removeClass('active');
-            $(this).addClass('active');
+            handleActiveDisabled($(this));
         })
         $('.pagination').append(li);
     }
 
     // Add active class to first list item
-    $('.pagination > li:nth-child(2)').addClass('active')
+    $('.pagination > li:nth-child(1)').addClass('active')
+
+    function addPrevNextFunc(li) {
+        li.on('click', function () {
+            if (li.attr('class') !== 'page-item disabled') {
+                // Add active class to the current list item
+                let activeIndex = parseInt($('.page-item.active > .page-link').html());
+                let tabIndex = parseInt($('> .page-link', this).attr('tabindex'));
+                let newIndex = activeIndex + tabIndex + 1;
+                handleActiveDisabled($(`.pagination > li:nth-child(${newIndex})`));
+            }
+        })
+    }
+
+    // Create Previous nav button
+    let aPrev = createPageLink(`<`, `#`);
+    aPrev.attr('tabindex', -1);
+    let liPrev = createPageItem(aPrev);
+    addPrevNextFunc(liPrev);
+    liPrev.addClass('disabled');
+    $('.pagination').prepend(liPrev);
 
     // Create Next nav button
     let aNext = createPageLink(`>`, `#`);
-    aNext.attr('tabindex',1);
+    aNext.attr('tabindex', 1);
     let liNext = createPageItem(aNext);
     addPrevNextFunc(liNext);
     $('.pagination').append(liNext);
