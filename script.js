@@ -121,8 +121,6 @@ let json = [
     }
 ];
 
-displayResults(json.slice(0,6));
-
 function displayResults(data) {
     function createTD(inner) {
         let td = $('<td>');
@@ -184,12 +182,11 @@ function createListItems(data, numPerPage) {
     }
 
     function handleResults() {
-        $('tbody').empty();
+        $('tbody > tr:nth-child(n+2)').empty();
         let activeIndex = parseInt($('.page-item.active > .page-link').html());
         let multiplier = activeIndex - 1;
         let start = multiplier * numPerPage;
         let end = Math.min(data.length, start + 6);
-        console.log(start,end);
         displayResults(data.slice(start,end));
     }
 
@@ -237,4 +234,5 @@ function createListItems(data, numPerPage) {
 
 }
 
+displayResults(json.slice(0,6));
 createListItems(json, 6);
